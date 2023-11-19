@@ -1,23 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
-
+import React, { useState } from 'react';
+import InputForm from './InputForm/InputForm';
+import ComicDisplay from './ComicDisplay/ComicDisplay';
+import query from './API';
+import "./App.css";
 function App() {
+  const [comicImages, setComicImages] = useState([]);
+
+  const generateComic = async (texts) => {
+    const images = await Promise.all(
+      texts.map((text) => query({ inputs: text }))
+    );
+    setComicImages(images);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app-container">
+      <div className='app-container-1'>
+          <InputForm onSubmit={generateComic} />
+      </div>
+      <div className='app-container-2'>
+          <ComicDisplay images={comicImages} />
+      </div>  
     </div>
   );
 }
